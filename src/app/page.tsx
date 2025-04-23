@@ -1,92 +1,107 @@
-"use client"
+import { ArrowRight, FileText, FolderIcon as FolderSort, Image, Zap } from "lucide-react"
+import Link from "next/link"
 
-import { useState } from "react"
-import { FilePicker } from "@/components/ui/FilePicker"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Header from "@/components/header"
+import Footer from "@/components/footer"
+import PricingSection from "@/components/pricing-section"
+import DemoSection from "@/components/demo-section"
+import FeatureSection from "@/components/feature-section"
+import HeroSection from "@/components/hero-section"
 
 export default function Home() {
-  const [files, setFiles] = useState<File[]>([])
-  const [pattern, setPattern] = useState("[{counter},{date}]")
-
-  const handleRename = () => {
-    if (files.length === 0) return
-    
-    // Implement your renaming logic here
-    const renamedFiles = files.map((file, index) => {
-      const date = new Date().toISOString().split('T')[0] // YYYY-MM-DD
-      const extension = file.name.split('.').pop()
-      return {
-        original: file.name,
-        renamed: `_${String(index + 1).padStart(3, '0')}_${date}.${extension}`
-      }
-    })
-    
-    console.log(renamedFiles)
-    // TODO: Add download functionality
-  }
-
   return (
-    <div className="container mx-auto p-4 max-w-3xl">
-      <h1 className="text-2xl font-bold mb-6">File Renamer</h1>
-      
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-lg font-medium mb-2">Upload Files</h2>
-          <FilePicker onFilesSelected={setFiles} />
-        </div>
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <main className="flex-1">
+        <HeroSection />
+        <FeatureSection />
+        <DemoSection />
+        <PricingSection />
 
-        <div>
-          <h2 className="text-lg font-medium mb-2">Naming Pattern</h2>
-          <input
-            type="text"
-            value={pattern}
-            onChange={(e) => setPattern(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="e.g. [{counter},{date}]"
-          />
-          <p className="text-sm text-gray-500 mt-1">
-            Available placeholders: {"{counter}"}, {"{date}"}, {"{text}"}
-          </p>
-        </div>
+        {/* Target Users Section */}
+        <section className="container py-12 md:py-24 lg:py-32">
+          <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
+            <h2 className="text-3xl font-bold leading-[1.1] sm:text-3xl md:text-5xl">Who Benefits from FileFlow?</h2>
+            <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
+              Our tool is designed for anyone who deals with large numbers of files and needs an efficient way to
+              organize them.
+            </p>
+          </div>
 
-        {files.length > 0 && (
-          <div>
-            <h2 className="text-lg font-medium mb-2">Preview</h2>
-            <div className="border rounded-lg overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2 text-left">Original Filename</th>
-                    <th className="px-4 py-2 text-left">New Filename</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {files.map((file, index) => {
-                    const date = new Date().toISOString().split('T')[0]
-                    const extension = file.name.split('.').pop()
-                    return (
-                      <tr key={index}>
-                        <td className="px-4 py-2">{file.name}</td>
-                        <td className="px-4 py-2">
-                          {`_${String(index + 1).padStart(3, '0')}_${date}.${extension}`}
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+          <div className="grid grid-cols-1 gap-6 pt-12 md:grid-cols-2 lg:grid-cols-3">
+            {targetUsers.map((user) => (
+              <Card key={user.title} className="flex flex-col">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <user.icon className="h-5 w-5" />
+                    <span>{user.title}</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <p className="text-muted-foreground">{user.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="container py-12 md:py-24 lg:py-32 bg-slate-50 rounded-lg">
+          <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
+            <h2 className="text-3xl font-bold leading-[1.1] sm:text-3xl md:text-5xl">Ready to organize your files?</h2>
+            <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
+              Start with our free plan and upgrade anytime as your needs grow.
+            </p>
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <Button asChild size="lg">
+                <Link href="#pricing">
+                  Get Started <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button variant="outline" size="lg">
+                <Link href="#demo">See Demo</Link>
+              </Button>
             </div>
           </div>
-        )}
-
-        <Button 
-          onClick={handleRename}
-          disabled={files.length === 0}
-          className="w-full"
-        >
-          Rename & Download Files
-        </Button>
-      </div>
+        </section>
+      </main>
+      <Footer />
     </div>
   )
 }
+
+const targetUsers = [
+  {
+    title: "Photographers",
+    icon: Image,
+    description: "Organize thousands of images with meaningful names based on date, location, or content.",
+  },
+  {
+    title: "Marketers",
+    icon: FileText,
+    description: "Keep ad creatives, social media assets, and campaign files structured and easily accessible.",
+  },
+  {
+    title: "Researchers",
+    icon: FileText,
+    description: "Sort academic papers, datasets, and research materials with consistent naming conventions.",
+  },
+  {
+    title: "Freelancers",
+    icon: FolderSort,
+    description: "Maintain clear organization of client files, deliverables, and project assets.",
+  },
+  {
+    title: "Developers",
+    icon: FileText,
+    description: "Clean up project assets, manage code samples, and organize documentation efficiently.",
+  },
+  {
+    title: "Anyone with Digital Files",
+    icon: Zap,
+    description: "Bring order to your personal or professional digital life with smart file organization.",
+  },
+]
+
